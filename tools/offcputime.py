@@ -203,7 +203,7 @@ bpf_text = bpf_text.replace('MAXBLOCK_US_VALUE', str(args.max_block_time))
 
 # handle stack args
 kernel_stack_get = "stack_traces.get_stackid(ctx, 0)"
-user_stack_get = "stack_traces.get_stackid(ctx, BPF_F_USER_STACK)"
+user_stack_get = "stack_traces.get_stackid(ctx, BPF_F_USER_STACK | BPF_F_REUSE_STACKID)"
 stack_context = ""
 if args.user_stacks_only:
     stack_context = "user"
