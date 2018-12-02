@@ -74,6 +74,7 @@ stack_group.add_argument("-U", "--user-stacks-only", action="store_true",
     help="show stacks from user space only (no kernel space stacks)")
 stack_group.add_argument("-K", "--kernel-stacks-only", action="store_true",
     help="show stacks from kernel space only (no user space stacks)")
+stack_group.add_argument("--reuse-user-stack", action="store_true", help='reuse user stack to avoid stack map collision (NOTE: open this can solve "Missed User Stack", buut will cause a greate increase of the size of stack collected, so you can appropriately increase the stack-storage-size option)')
 parser.add_argument("-d", "--delimited", action="store_true",
     help="insert delimiter between kernel/user stacks")
 parser.add_argument("-f", "--folded", action="store_true",
@@ -203,7 +204,10 @@ bpf_text = bpf_text.replace('MAXBLOCK_US_VALUE', str(args.max_block_time))
 
 # handle stack args
 kernel_stack_get = "stack_traces.get_stackid(ctx, 0)"
-user_stack_get = "stack_traces.get_stackid(ctx, BPF_F_USER_STACK | BPF_F_REUSE_STACKID)"
+if args.reuse_user_stack:
+  user_stack_get = "stack_traces.get_stackid(ctx, BPF_F_USER_STACK | BPF_F_REUSE_STACKID)"
+else:
+  user_stack_get = "stack_traces.get_stackid(ctx, BPF_F_USER_STACK)"
 stack_context = ""
 if args.user_stacks_only:
     stack_context = "user"

@@ -716,6 +716,11 @@ I'd save this output to a file, then move it to the system where you'll be
 creating your "off-CPU time flame graphs".
 
 
+If you notice a lot of "Missed User Stack" in you output file, you can do something like this:
+# ./offcputime.py --reuse-user-stack --stack-storage-size=10240 
+
+This will get rid of "Missed User Stack" which is largely caused by stack map collision, but will increase the collocted stack size, so you can approporiately enlarge the stack size by set a larger number to stack-storage-size option.
+
 USAGE message:
 
 # ./offcputime.py -h
